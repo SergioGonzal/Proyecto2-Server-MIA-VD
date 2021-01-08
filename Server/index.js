@@ -48,9 +48,67 @@ app.post('/crearPadreHijo', async function(req, res) {
     }
 });
 
+app.post('/loginPadre', async function(req, res) {
+    try{
+        const email = req.body.email;
+        const pass = req.body.password;
 
+        let sql = 'SELECT contraseña FROM padre WHERE email=\'' + email + '\'';
+        let result = await DB.Open(sql, [], false);
+        let auth = [];
 
+        auth = result.rows.map(user =>{
 
+            if (user[0] == pass) {
+                let authSchema = {
+                    "auth" : true
+                }
+                return(authSchema);
+            }else {
+                let authSchema = {
+                    "auth" : false
+                }
+                return(authSchema);
+            }
+        })
+
+        res.json(auth)
+    } catch (err) {
+        res.send('Error !')
+        console.log('Error ! ', err)
+    }
+});
+
+app.post('/loginHijo', async function(req, res) {
+    try{
+        const email = req.body.email;
+        const pass = req.body.password;
+
+        let sql = 'SELECT padre.contraseña FROM padre, hijo WHERE hijo.email_padre=\'' + email + '\'';
+        let result = await DB.Open(sql, [], false);
+        let auth = [];
+
+        auth = result.rows.map(user =>{
+
+            if (user[0] == pass) {
+                let authSchema = {
+                    "auth" : true
+                }
+                return(authSchema);
+            }else {
+                let authSchema = {
+                    "auth" : false
+                }
+                return(authSchema);
+            }
+        })
+
+        res.json(auth)
+    } catch (err) {
+        res.send('Error !')
+        console.log('Error ! ', err)
+    }
+});
 
 
 
@@ -120,36 +178,7 @@ app.post('/registro', async function(req, res) {
     }
 });
 
-app.post('/login', async function(req, res) {
-    try{
-        const email = req.body.email;
-        const pass = req.body.password;
 
-        let sql = 'SELECT contraseña FROM usuario WHERE email=\'' + email + '\'';
-        let result = await DB.Open(sql, [], false);
-        let auth = [];
-
-        auth = result.rows.map(user =>{
-
-            if (user[0] == pass) {
-                let authSchema = {
-                    "auth" : true
-                }
-                return(authSchema);
-            }else {
-                let authSchema = {
-                    "auth" : false
-                }
-                return(authSchema);
-            }
-        })
-
-        res.json(auth)
-    } catch (err) {
-        res.send('Error !')
-        console.log('Error ! ', err)
-    }
-});
 
 app.get('/getUsuarios', async function(req, res) {
     try {
