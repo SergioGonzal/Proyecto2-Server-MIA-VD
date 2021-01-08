@@ -81,10 +81,10 @@ app.post('/loginPadre', async function(req, res) {
 
 app.post('/loginHijo', async function(req, res) {
     try{
-        const email = req.body.email;
+        const nickname = req.body.nickname;
         const pass = req.body.password;
 
-        let sql = 'SELECT padre.contraseña FROM padre, hijo WHERE hijo.email_padre=\'' + email + '\'';
+        let sql = 'SELECT padre.contraseña FROM padre, hijo WHERE hijo.nickname=\'' + nickname + '\'';
         let result = await DB.Open(sql, [], false);
         let auth = [];
 
