@@ -132,6 +132,25 @@ app.post('/getHijos', async function(req, res) {
     }
 });
 
+app.post('/crearHijo', async function(req, res) {
+    try{
+        const email = req.body.email;
+        const nombreHijo = req.body.nombreHijo;
+        const nickname = req.body.nickname;
+        const fecha = req.body.fecha;
+        const sexo = req.body.sexo;
+
+        let sql2 = 'INSERT INTO hijo(nombre_hijo, nickname, fecha_nacimineto, sexo, email_padre) VALUES (\'' + nombreHijo + '\', \'' + nickname + '\', \'' + fecha + '\', \'' + sexo + '\', \'' + email + '\')';
+        await DB.Open(sql2, [], true);
+
+        res.send('Usuarios agregado con éxito!')
+        console.log('Usuarios agregados con éxito!')
+    } catch (err) {
+        res.send('Error al crear los usuarios!')
+        console.log('Error al crear los usuarios! ', err)
+    }
+});
+
 
 
 
