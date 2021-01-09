@@ -110,6 +110,31 @@ app.post('/loginHijo', async function(req, res) {
     }
 });
 
+app.post('/getHijos', async function(req, res) {
+    try{
+        const email = req.body.email;
+
+        let sql = 'SELECT hijo.nombre_hijo FROM padre, hijo WHERE hijo.email_padre = \'' + email + '\'';
+        let result = await DB.Open(sql, [], false);
+        let usuarios = [];
+
+        usuarios = result.rows.map(user =>{
+            let usuariosSchema = {
+                "ID" : id,
+                "Total":  user[0]
+            }
+
+            return(usuariosSchema);
+        })
+        res.json(usuarios);
+    } catch (err) {
+        res.send('Error !')
+        console.log('Error ! ', err)
+    }
+});
+
+
+
 
 
 
