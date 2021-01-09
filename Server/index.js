@@ -175,6 +175,22 @@ app.post('/getCartas', async function(req, res) {
     }
 });
 
+app.post('/aceptarCarta', async function(req, res) {
+    try{
+        const id = req.body.id;
+
+        let sql = 'UPDATE carta SET estado=\'Si\' WHERE id_carta=\'' + id + '\'';
+        let result = await DB.Open(sql, [], true);
+        
+        res.json(result);
+    } catch (err) {
+        res.send('Error !')
+        console.log('Error ! ', err)
+    }
+});
+
+
+
 
 
 
