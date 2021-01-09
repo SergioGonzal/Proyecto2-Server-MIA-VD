@@ -37,7 +37,7 @@ app.post('/crearPadreHijo', async function(req, res) {
         let sql1 = 'INSERT INTO padre(email, nombre_padre, contraseña, telefono, dinero, departamento, municipio, detalle) VALUES (\'' + email + '\', \'' + nombrePadre + '\', \'' + pass + '\', \'' + telefono + '\', \'' + dinero + '\', \'' + depto + '\', \'' + muni + '\', \'' + detalle + '\')';
         await DB.Open(sql1, [], true);
 
-        let sql2 = 'INSERT INTO hijo(nombre_hijo, nickname, fecha_nacimineto, sexo, email_padre) VALUES (\'' + nombreHijo + '\', \'' + nickname + '\', \'' + fecha + '\', \'' + sexo + '\', \'' + email + '\')';
+        let sql2 = 'INSERT INTO hijo(nombre_hijo, nickname, fecha_nacimineto, sexo, bastones, email_padre) VALUES (\'' + nombreHijo + '\', \'' + nickname + '\', \'' + fecha + '\', \'' + sexo + '\', 0, \'' + email + '\')';
         await DB.Open(sql2, [], true);
 
         res.send('Usuarios agregado con éxito!')
@@ -140,7 +140,7 @@ app.post('/crearHijo', async function(req, res) {
         const fecha = req.body.fecha;
         const sexo = req.body.sexo;
 
-        let sql2 = 'INSERT INTO hijo(nombre_hijo, nickname, fecha_nacimineto, sexo, email_padre) VALUES (\'' + nombreHijo + '\', \'' + nickname + '\', \'' + fecha + '\', \'' + sexo + '\', \'' + email + '\')';
+        let sql2 = 'INSERT INTO hijo(nombre_hijo, nickname, fecha_nacimineto, sexo, bastones, email_padre) VALUES (\'' + nombreHijo + '\', \'' + nickname + '\', \'' + fecha + '\', \'' + sexo + '\', 0, \'' + email + '\')';
         await DB.Open(sql2, [], true);
 
         res.send('Usuarios agregado con éxito!')
@@ -151,7 +151,29 @@ app.post('/crearHijo', async function(req, res) {
     }
 });
 
+app.post('/getCartas', async function(req, res) {
+    try{
+        const nombre = req.body.nombre;
 
+        let sql = 'SELECT carta.id_carta, carta.estado, juguete.nombre_juguete FROM padre, hijo, carta, carta_juguete, juguete WHERE hijo.email_padre=padre.email AND hijo.nombre_hijo=\'' + nombre + '\' AND carta.id_hijo=hijo.id_hijo AND carta_juguete.id_carta=carta.id_carta AND carta_juguete.id_juguete=juguete.id_juguete';
+        let result = await DB.Open(sql, [], false);
+        let usuarios = [];
+
+        usuarios = result.rows.map(user =>{
+            let usuariosSchema = {
+                "id":  user[0],
+                "estado": user[1],
+                "nombre": user[2]
+            }
+
+            return(usuariosSchema);
+        })
+        res.json(usuarios);
+    } catch (err) {
+        res.send('Error !')
+        console.log('Error ! ', err)
+    }
+});
 
 
 
